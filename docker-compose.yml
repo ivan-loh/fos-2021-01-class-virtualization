@@ -1,0 +1,47 @@
+version: '3.1'
+
+services:
+
+  web:
+    image: php:apache
+    restart: always
+    ports:
+      - 8000:80
+    volumes:
+      - /home/ubuntu/projects/sample-web-server/www:/var/www/html
+
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE:
+      MYSQL_USER:
+      MYSQL_PASSWORD:
+      MYSQL_ROOT_PASSWORD:
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 9000:80
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=
+      - PMA_PASSWORD=
+
+  openssh-server:
+    image: ghcr.io/linuxserver/openssh-server
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kuala_Lumpur
+      - SUDO_ACCESS=true
+      - PASSWORD_ACCESS=true
+      - USER_PASSWORD=
+      - USER_NAME=
+    volumes:
+      - /home/ubuntu/projects/sample-web-server/www:/app/www
+    ports:
+      - 10000:2222
+    restart: unless-stopped
+
